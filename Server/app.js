@@ -7,6 +7,7 @@ const meterRoutes = require("./routes/meter");
 
 require("dotenv").config();
 require("./database")
+require("./redis")
 
 const app = express();
 const port = process.env.PORT;
