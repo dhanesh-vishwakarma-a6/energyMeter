@@ -1,32 +1,64 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
+const { Sequelize, DataTypes } = require("sequelize")
 
-const sequelize = new Sequelize("sqlite::memory:");
+const sequelize = new Sequelize("mysql::memory:");
 const Meter = sequelize.define(
   "Meter",
   {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      validate: {
+        notEmpty: true,
+        notNull: true,
+      }
     },
     serialNumber: {
-      type: DataTypes.NUMBER,
-      allowNull: false
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: true,
+        notNull: true,
+      }
     },
     utilityType: {
-      type: DataTypes.ENUM
+      type: DataTypes.ENUM,
+      values: [
+        "electric",
+        "water",
+        "gas"
+      ],
+      validate: {
+        notEmpty: true,
+        notNull: true,
+      }
     },
-    lon: {
+    longitude: {
       type: DataTypes.DECIMAL,
-      allowNull: false
+      validate: {
+        notEmpty: true,
+        notNull: true,
+      }
     },
-    lat: {
+    latitude: {
       type: DataTypes.DECIMAL,
-      allowNull: false
+      validate: {
+        notEmpty: true,
+        notNull: true,
+      }
     },
+    readings: {
+      type: DataTypes.ARRAY(DataTypes.JSON),
+      defaultValue: [],
+      validate: {
+        notEmpty: true,
+      }
+    }
   },
   {
     sequelize,
-    modelName: "Meter"
+    freezeTableName: true,
+    timestamps: true,
+    createdAt: "createdAt",
+    updatedAt: "updatedAt", I
   }
 );
 

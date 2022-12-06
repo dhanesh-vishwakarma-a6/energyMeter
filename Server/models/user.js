@@ -1,36 +1,73 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
+const { Sequelize, DataTypes } = require("sequelize")
 
-const sequelize = new Sequelize("sqlite::memory:");
-const User = sequelize.define("User",
+const sequelize = new Sequelize("mysql::memory:");
+const User = sequelize.define(
+  "User",
   {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      validate: {
+        notEmpty: true,
+        notNull: true,
+      }
     },
     firstName: {
       type: DataTypes.STRING,
-      allowNull: false
+      validate: {
+        len: [2, 10],
+        isAlpha: true,
+        notEmpty: true,
+        notNull: true,
+      }
     },
     lastName: {
       type: DataTypes.STRING,
-      allowNull: false
+      validate: {
+        len: [2, 10],
+        isAlpha: true,
+        notEmpty: true,
+        notNull: true,
+      }
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false
+      unique: true,
+      validate: {
+        isEmail: true,
+        notEmpty: true,
+        notNull: true,
+      }
     },
-    password: {
+    hash_password: {
       type: DataTypes.STRING,
-      allowNull: false
+      validate: {
+        notEmpty: true,
+        notNull: true,
+      }
     },
-    role: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+    salt: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: true,
+        notNull: true,
+      }
+    },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      validate: {
+        notEmpty: true,
+        notNull: true,
+      }
     }
   },
   {
     sequelize,
-    modelName: "User"
+    freezeTableName: true,
+    timestamps: true,
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
   }
 );
 
